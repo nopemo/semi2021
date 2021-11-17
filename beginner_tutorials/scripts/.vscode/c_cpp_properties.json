@@ -1,0 +1,24 @@
+{
+  "configurations": [
+    {
+      "browse": {
+        "databaseFilename": "",
+        "limitSymbolsToIncludedHeaders": true
+      },
+      "includePath": [
+        "/home/mech-user/ros/semi_ws/devel/include/**",
+        "/opt/ros/melodic/include/**",
+        "/home/mech-user/ros/semi_ws/src/beginner_tutorials/include/**",
+        "/home/mech-user/ros/semi_ws/src/sensor_interface/cfs_sensor/include/**",
+        "/opt/ros/melodic/share/julius/include/**",
+        "/home/mech-user/ros/semi_ws/src/sensor_interface/leddar_one/include/**",
+        "/home/mech-user/ros/semi_ws/src/sensor_interface/lepton_thermal_sensor/include/**",
+        "/home/mech-user/ros/semi_ws/src/sensor_interface/px4flow_node/include/**",
+        "/home/mech-user/ros/semi_ws/src/sensor_interface/takasako_sps/include/**",
+        "/usr/include/**"
+      ],
+      "name": "ROS"
+    }
+  ],
+  "version": 4
+}
