@@ -1,0 +1,32 @@
+{
+  "configurations": [
+    {
+      "browse": {
+        "databaseFilename": "",
+        "limitSymbolsToIncludedHeaders": true
+      },
+      "includePath": [
+        "/opt/ros/melodic/include/**",
+        "/home/mech-user/ros/enshu_ws/devel/include/**",
+        "/home/mech-user/ros/semi_ws/devel/include/**",
+        "/home/mech-user/ros/semi_ws/src/semi2021/beginner_tutorials/include/**",
+        "/home/mech-user/ros/semi_ws/src/codec_image_transport/include/**",
+        "/home/mech-user/ros/enshu_ws/src/homework/include/**",
+        "/opt/ros/melodic/share/julius/include/**",
+        "/home/mech-user/ros/enshu_ws/src/kobuki/kobuki_auto_docking/include/**",
+        "/home/mech-user/ros/enshu_ws/src/kobuki/kobuki_bumper2pc/include/**",
+        "/home/mech-user/ros/enshu_ws/src/kobuki/kobuki_controller_tutorial/include/**",
+        "/home/mech-user/ros/enshu_ws/src/kobuki_desktop/kobuki_gazebo_plugins/include/**",
+        "/home/mech-user/ros/enshu_ws/src/kobuki/kobuki_keyop/include/**",
+        "/home/mech-user/ros/enshu_ws/src/kobuki/kobuki_node/include/**",
+        "/home/mech-user/ros/enshu_ws/src/kobuki/kobuki_random_walker/include/**",
+        "/home/mech-user/ros/enshu_ws/src/kobuki/kobuki_safety_controller/include/**",
+        "/home/mech-user/ros/semi_ws/src/semi2021/semi2021_robot/include/**",
+        "/home/mech-user/ros/enshu_ws/src/turtlebot_apps/turtlebot_actions/include/**",
+        "/usr/include/**"
+      ],
+      "name": "ROS"
+    }
+  ],
+  "version": 4
+}

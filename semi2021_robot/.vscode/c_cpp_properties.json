@@ -1,0 +1,25 @@
+{
+  "configurations": [
+    {
+      "browse": {
+        "databaseFilename": "",
+        "limitSymbolsToIncludedHeaders": true
+      },
+      "includePath": [
+        "/home/mech-user/ros/semi_ws/devel/include/**",
+        "/home/mech-user/coral_ws/devel/include/**",
+        "/opt/ros/melodic/include/**",
+        "/home/mech-user/ros/semi_ws/src/semi2021/beginner_tutorials/include/**",
+        "/home/mech-user/coral_ws/src/vision_opencv/cv_bridge/include/**",
+        "/home/mech-user/ros/semi_ws/src/codec_image_transport/include/**",
+        "/home/mech-user/coral_ws/src/dynamic_reconfigure/include/**",
+        "/home/mech-user/coral_ws/src/vision_opencv/image_geometry/include/**",
+        "/opt/ros/melodic/share/julius/include/**",
+        "/home/mech-user/ros/semi_ws/src/semi2021/semi2021_robot/include/**",
+        "/usr/include/**"
+      ],
+      "name": "ROS"
+    }
+  ],
+  "version": 4
+}
