@@ -1,165 +1,91 @@
 #!/usr/bin/env python
-# Software License Agreement (BSD License)
-#
-# Copyright (c) 2008, Willow Garage, Inc.
-# All rights reserved.
-#
-# Redistribution and use in source and binary forms, with or without
-# modification, are permitted provided that the following conditions
-# are met:
-#
-#  * Redistributions of source code must retain the above copyright
-#    notice, this list of conditions and the following disclaimer.
-#  * Redistributions in binary form must reproduce the above
-#    copyright notice, this list of conditions and the following
-#    disclaimer in the documentation and/or other materials provided
-#    with the distribution.
-#  * Neither the name of Willow Garage, Inc. nor the names of its
-#    contributors may be used to endorse or promote products derived
-#    from this software without specific prior written permission.
-#
-# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-# "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
-# LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
-# FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
-# COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
-# INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
-# BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-# LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-# CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
-# LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
-# ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
-# POSSIBILITY OF SUCH DAMAGE.
-#
-# Revision $Id$
-
-## Simple talker demo that listens to std_msgs/Strings published 
-## to the 'chatter' topic
 
 import rospy
-from rospy.core import rospydebug
-from std_msgs.msg import String
+from rospy.core import loginfo, rospydebug
+from std_msgs.msg import String,UInt8
 from geometry_msgs.msg import Twist
-from jsk_recognition_msgs.msg import PeoplePoseArray
+from jsk_recognition_msgs.msg import RectArray
 from opencv_apps.msg import RotatedRectArrayStamped
+from opencv_apps.msg._Point2D import Point2D
+from math import sqrt
 
-def callback(msg):
-    rospy.loginfo(rospy.get_caller_id())
-    if msg.poses:
-        poses = msg.poses
-        limb_names = poses[0].limb_names
-        pose = poses[0].poses
-        for i,item in enumerate(limb_names):
-            if item == 'right wrist':
-                right_wrist = (True,i)
-            elif item == 'right shoulder':
-                right_shoulder = (True,i)
-            elif item == 'left wrist':
-                left_wrist = (True,i)
-            elif item == 'left shoulder':
-                left_shoulder = (True,i)
-            elif item == 'nose':
-                nose = (True,i)
-        
-        if right_wrist[0]:
-            right_wrist_pos = pose[right_wrist[1]].position
-        if left_wrist[0]:
-            left_wrist_pos = pose[left_wrist[1]].position
-        if right_shoulder[0]:
-            right_shoulder_pos = pose[right_shoulder[1]].position
-        if left_shoulder[0]:
-            left_shoulder_pos = pose[left_shoulder[1]].position
+class new_Point2D(Point2D):
+    def __init__(self, x=0, y=0):
+        if type(x) == int or type(x) == float:
+            super(Point2D,self).__init__(x,y)
+        elif type(x) == Point2D:
+            super(Point2D,self).__init__(x.x, x.y)
 
-def callback_blue(msg):
-    rospy.loginfo(rospy.get_caller_id())
-    if len(msg)>0:
-        rospy.loginfo(len(msg.rects))
-        rospy.loginfo(msg.rects[-1])
+    def __sub__(self, other):
+        return new_Point2D(self.x - other.x, self.y - other.y)
 
-def listener():
+    def __add__(self, other):
+        return new_Point2D(self.x + other.x, self.y + other.y)
 
-    # In ROS, nodes are uniquely named. If two nodes with the same
-    # name are launched, the previous one is kicked off. The
-    # anonymous=True flag means that rospy will choose a unique
-    # name for our 'listener' node so that multiple listeners can
-    # run simultaneously.
-    rospy.init_node('listener', anonymous=True)
+    def __mul__(self, other):
+        if type(other) == new_Point2D:
+            return self.x * other.x + self.y * other.y
+        elif type(other) == float or type(other) == int:
+            return new_Point2D(self.x * other, self.y * other)
+    
+    def ToOld(self):
+        return Point2D(self.x,self.y)
+    
 
-    #rospy.Subscriber('/edgetpu_human_pose_estimator/output/poses', PeoplePoseArray, callback)
-    rospy.Subscriber('/blue_conter/rectangles',RotatedRectArrayStamped,callback_blue)
+class check_node():
+    def __init__(self):
 
-    # spin() simply keeps python from exiting until this node is stopped
-    rospy.spin()
+        self.point_blue=[new_Point2D(0,0),False]
+        self.point_green=[new_Point2D(0,-1),False]
+        self.dist=60
+        self.face=[new_Point2D(0,0),False]
+        self.camera_width=640
+        self.camera_height=480
 
-if __name__ == '__main__':
-    listener()
+        self.sub_blue = rospy.Subscriber('blue_conter/rectangles', RotatedRectArrayStamped, self.callback_blue)
+        self.sub_green = rospy.Subscriber('green_conter/rectangles', RotatedRectArrayStamped, self.callback_green)
+        self.sub_face=rospy.Subscriber('edgetpu_face_detector/output/rects',RectArray,self.callback_face)
 
+        self.pub_flip =rospy.Publisher('tello/flip',UInt8, queue_size = 1)
+        self.pub_vel=rospy.Publisher('tello/cmd_vel',Twist, queue_size = 1)
+    
+    def callback_blue(self,msg):
+        if len(msg.rects)>0:
+            rospy.loginfo("callback_blue")
+            self.point_blue=[new_Point2D(msg.rects[-1].center),True]
 
-"""
-#!/usr/bin/env python
-# license removed for brevity
-from re import I
-import rospy
-from std_msgs.msg import String
-from std_msgs.msg import Empty
-from std_msgs.msg import UInt8
-from geometry_msgs.msg import Twist
-from jsk_recognition_msgs.msg import PeoplePoseArray
-import math
-import time
-
-
-def callback(msg):
-    right_wrist = (False, 0)
-    right_shoulder = (False, 0)
-    left_wrist = (False,0)
-    left_shoulder = (False,0)
-
-
-
-    if msg.poses:
-        poses = msg.poses
-        limb_names = poses[0].limb_names
-        pose = poses[0].poses
-        for i,item in enumerate(limb_names):
-            if item == 'right wrist':
-                right_wrist = (True,i)
-            elif item == 'right shoulder':
-                right_shoulder = (True,i)
-            elif item == 'left wrist':
-                left_wrist = (True,i)
-            elif item == 'left shoulder':
-                left_shoulder = (True,i)
-            elif item == 'nose':
-                nose = (True,i)
-        
-        if right_wrist[0]:
-            right_wrist_pos = pose[right_wrist[1]].position
-        if left_wrist[0]:
-            left_wrist_pos = pose[left_wrist[1]].position
-        if right_shoulder[0]:
-            right_shoulder_pos = pose[right_shoulder[1]].position
-        if left_shoulder[0]:
-            left_shoulder_pos = pose[left_shoulder[1]].position
-
-        
-        if right_wrist_pos.y > right_shoulder_pos.y:
-            pub = rospy.Publisher('/tello/takeoff', Empty, queue_size=1)
-            pub.publish()
-
-        if left_wrist_pos.y > left_shoulder_pos.y:
-            pub = rospy.Publisher('/tello/land', Empty, queue_size=11)
-            pub.publish()
-
+    def callback_green(self,msg):
+        if len(msg.rects)>0:
+            rospy.loginfo("callback_green")
+            self.point_green=[new_Point2D(msg.rects[-1].center),True]
+    
+    def callback_face(self,msg):
+        if len(msg.rects)==1:
+            rospy.loginfo("callback_face")
+            self.face=[msg[0],True]
             
-        
+    def calc_vel(self):
+        if self.face[1]==True:
+            tmp_twist=Twist()
+            tmp_twist.linear.y=(-msg.rects[0].width+self.dist)/70
+            tmp_twist.angular.z=(-(msg.rects[0].x+msg.rects[0].width/2.0)+self.camera_width/2.0)/70.0
+            rospy.loginfo("calc_vel")
+            rospy.loginfo(tmp_twist)
+            self.pub_vel.publish(tmp_twist)
+    def calc_distance(self):
+        if self.point_blue[1] and self.point_green[1]:
+            self.point_green[1]=False
+            self.point_blue[1]=False
+            rospy.loginfo("calc_distance")
+            self.dist=sqrt((self.point_blue[0]-self.point_green[0])*(self.point_blue[0]-self.point_green[0]))
 
-
-
+    def run(self):
+        while not rospy.is_shutdown():
+            self.calc_vel()
+            self.calc_distance()
+            rospy.sleep(0.1)
+    
 if __name__ == '__main__':
-    try:
-        rospy.init_node('controler', anonymous=True)
-        rospy.Subscriber('/edgetpu_human_pose_estimator/output/poses', PeoplePoseArray, callback)
-        rospy.spin()
-        
-    except rospy.ROSInterruptException: pass"""
+    rospy.init_node('check_node')
+    check_node = check_node()
+    check_node.run()

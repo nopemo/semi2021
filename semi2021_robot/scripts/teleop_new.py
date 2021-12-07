@@ -29,18 +29,18 @@ For Holonomic mode (strafing), hold down the shift key:
 
 Flipping:
 ---------------------------
-        r
-   d    f    g
-        v
+   W    E    R
+   S         F
+   X    C    V
 
 t : up (+z)
 b : down (-z)
 
 T: take off
-B: land
+G: land
 
-a: emergency stop
-s: palm landing
+D: emergency stop
+B: palm landing
 
 
 
@@ -84,19 +84,21 @@ speedBindings={
     }
 
 flipBindings={
-        'r':0,
-        'd':1,
-        'f':2,
-        'g':3,
-        'v':4,
-        'F':5
+        'E':0,
+        'C':1,
+        'F':2,
+        'S':3,
+        'W':4,
+        'X':5,
+        'R':6,
+        'V':7
     }
 
 etcBindings={
         'T':'tello/takeoff',
-        'B':'tello/land',
-        'a':'tello/emergency',
-        's':'tello/palm_land'
+        'G':'tello/land',
+        'D':'tello/emergency',
+        'V':'tello/palm_land'
     }
 
 
@@ -238,7 +240,7 @@ if __name__=="__main__":
             elif key in etcBindings.keys():
                 rospy.Publisher(etcBindings[key], Empty, queue_size = 1).publish(Empty())
             elif key in flipBindings.keys():
-                rospy.Publisher('/tello/flip',UInt8,queue_size=1).publish(flipBindings[key])
+                rospy.Publisher('/tello/flip',UInt8,queue_size=1).publish(UInt8(flipBindings[key]))
             else:
                 # Skip updating cmd_vel if key timeout and robot already
                 # stopped.

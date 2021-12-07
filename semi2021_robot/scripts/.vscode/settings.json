@@ -4,5 +4,11 @@
         "/home/mech-user/ros/enshu_ws/devel/lib/python2.7/dist-packages",
         "/opt/ros/melodic/lib/python2.7/dist-packages",
         "/home/mech-user/coral_ws/devel/lib/python3/dist-packages"
+    ],
+    "python.analysis.extraPaths": [
+        "/home/mech-user/ros/semi_ws/devel/lib/python2.7/dist-packages",
+        "/home/mech-user/ros/enshu_ws/devel/lib/python2.7/dist-packages",
+        "/opt/ros/melodic/lib/python2.7/dist-packages",
+        "/home/mech-user/coral_ws/devel/lib/python3/dist-packages"
     ]
 }
