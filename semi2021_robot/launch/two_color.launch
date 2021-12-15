@@ -14,12 +14,12 @@
     <param name="use_camera_info" value="$(arg use_camera_info)" />
     <param name="debug_view" value="$(arg debug_view)" />
     <param name="queue_size" value="$(arg queue_size)" />
-    <param name="h_limit_max" value="270" />
-    <param name="h_limit_min" value="190" />
-    <param name="s_limit_max" value="255" />
-    <param name="s_limit_min" value="100" />
+    <param name="h_limit_max" value="254" />
+    <param name="h_limit_min" value="194" />
+    <param name="s_limit_max" value="149" />
+    <param name="s_limit_min" value="238" />
     <param name="v_limit_max" value="256" />
-    <param name="v_limit_min" value="91" />
+    <param name="v_limit_min" value="96" />
   </node>
   <node name="green_color" pkg="opencv_apps" type="hsv_color_filter" output="screen">
     <remap from="image" to="$(arg image)" />
@@ -33,6 +33,18 @@
     <param name="v_limit_max" value="256" />
     <param name="v_limit_min" value="20" />
   </node>
+  <node name="yellow_color" pkg="opencv_apps" type="hsv_color_filter" output="screen">
+    <remap from="image" to="$(arg image)" />
+    <param name="use_camera_info" value="$(arg use_camera_info)" />
+    <param name="debug_view" value="$(arg debug_view)" />
+    <param name="queue_size" value="$(arg queue_size)" />
+    <param name="h_limit_max" value="69" />
+    <param name="h_limit_min" value="47" />
+    <param name="s_limit_max" value="255" />
+    <param name="s_limit_min" value="100" />
+    <param name="v_limit_max" value="255" />
+    <param name="v_limit_min" value="142" />
+  </node>
 
   <node name="green_conter" pkg="opencv_apps" type="general_contours" >
     <remap from="image" to="green_color/image" />
@@ -43,6 +55,13 @@
   </node>
   <node name="blue_conter" pkg="opencv_apps" type="general_contours" >
     <remap from="image" to="blue_color/image" />
+    <param name="use_camera_info" value="$(arg use_camera_info)" />
+    <param name="debug_view" value="$(arg debug_view)" />
+    <param name="queue_size" value="$(arg queue_size)" />
+    <param name="threshold" value="$(arg threshold)" />
+  </node>
+  <node name="yellow_conter" pkg="opencv_apps" type="general_contours" >
+    <remap from="image" to="yellow_color/image" />
     <param name="use_camera_info" value="$(arg use_camera_info)" />
     <param name="debug_view" value="$(arg debug_view)" />
     <param name="queue_size" value="$(arg queue_size)" />
