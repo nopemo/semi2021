@@ -441,7 +441,7 @@ class TelloNode(tello.Tello):
 
     def cb_cmd_vel(self, msg):
         self.set_pitch( self.__scale_vel_cmd(msg.linear.x) )
-        self.set_roll( self.__scale_vel_cmd(msg.linear.y) )
+        self.set_roll( self.__scale_vel_cmd(-msg.linear.y) )
         self.set_yaw( self.__scale_vel_cmd(-msg.angular.z) )
         self.set_throttle( self.__scale_vel_cmd(msg.linear.z) )
 

@@ -1,0 +1,8 @@
+<launch>
+  <include file="$(find semi2021_robot)/launch/two_color.launch" />
+  <include file="$(find tello_driver)/launch/tello_node.launch" />
+
+  <node name="control_tello" pkg="semi2021_robot" type="control_tello.py" output="screen" required="true"/>
+  <node name="teleop_new" pkg="semi2021_robot" type="teleop_new.py" output="screen" required="true"/>
+
+</launch>
